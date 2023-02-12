@@ -1,0 +1,52 @@
+type Query {
+    feed(filter: String, skip: Int, take: Int, orderBy: LinkOrderByInput): Feed!
+}
+
+type AuthPayload {
+    token: String
+    user: User
+}
+
+type User {
+    id: ID!
+    name: String!
+    email: String!
+    links: [Link!]!
+}
+
+input LinkOrderByInput {
+    description: Sort
+    url: Sort
+    createdAt: Sort
+}
+
+enum Sort {
+    asc
+    desc
+}
+
+type Link {
+    id: ID!
+    url: String!
+    description: String!
+    createdAt: DateTime!
+    postedBy: User
+}
+
+type Feed {
+    links: [Link!]!
+    count: Int!
+}
+
+scalar DateTime
+
+type Mutation {
+    post(url: String!, description: String!): Link!
+    signup(email: String!, password: String!, name: String!): AuthPayload
+    login(email: String!, password: String!): AuthPayload
+    signupOrLoginWithGithub(code: String!): AuthPayload
+}
+
+type Subscription {
+    newLink: Link
+}
